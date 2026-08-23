@@ -5,7 +5,19 @@ public class DoubleUp {
      */
    public static String doubleUp(String s) {
       // TODO: Fill in this function
-      return null;
+      int sLength = s.length();
+      String result = "";
+
+      if (sLength != 0) {
+         for (int i = 0; i < sLength; i += 1) {
+            char letter = s.charAt(i);
+            result += letter;
+            result += letter;
+         }
+         return result;
+      } else {
+         return null;
+      }
    }
    
    public static void main(String[] args) {
