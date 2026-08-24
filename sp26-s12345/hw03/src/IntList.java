@@ -41,8 +41,20 @@ public class IntList {
      */
     public static IntList incrRecursiveDestructive(IntList L, int x) {
         // TODO: Fill in this code
-        return null;
+        L.first += x;
+        if (L.rest != null) {
+            incrRecursiveDestructive(L.rest, x);
+        }
+        return L;
     }
+
+    /* False Method: In the end it returns the last node, not L.
+    *  if (L.rest == null) {
+    *      return L;
+    *  }
+    *  return incrRecursiveDestructive(L.rest, x);
+    * */
+    
 
     /*
      * =================================================================
