@@ -42,6 +42,11 @@ public class Particle {
     }
 
     public void moveInto(Particle other) {
+        other.flavor = this.flavor;
+        other.lifespan = this.lifespan;
+
+        this.flavor = ParticleFlavor.EMPTY;
+        this.lifespan = -1;
     }
 
     public void fall(Map<Direction, Particle> neighbors) {
