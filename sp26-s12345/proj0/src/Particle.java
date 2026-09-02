@@ -74,6 +74,25 @@ public class Particle {
 
 
     public void grow(Map<Direction, Particle> neighbors) {
+        int n = StdRandom.uniformInt(10);
+        if (n == 0) {
+            if (neighbors.get(Direction.UP).flavor == ParticleFlavor.EMPTY) {
+                neighbors.get(Direction.UP).flavor = this.flavor;
+                neighbors.get(Direction.UP).lifespan = LIFESPANS.get(neighbors.get(Direction.UP).flavor);
+            }
+        } else if (n == 1) {
+            if (neighbors.get(Direction.LEFT).flavor == ParticleFlavor.EMPTY) {
+                neighbors.get(Direction.LEFT).flavor = this.flavor;
+                neighbors.get(Direction.LEFT).lifespan = LIFESPANS.get(neighbors.get(Direction.LEFT).flavor);
+            }
+        } else if (n == 2) {
+            if (neighbors.get(Direction.RIGHT).flavor == ParticleFlavor.EMPTY) {
+                neighbors.get(Direction.RIGHT).flavor = this.flavor;
+                neighbors.get(Direction.RIGHT).lifespan = LIFESPANS.get(neighbors.get(Direction.RIGHT).flavor);
+            }
+        } else if (n >=3 && n <= 9) {
+            return;
+        }
     }
 
     public void burn(Map<Direction, Particle> neighbors) {
