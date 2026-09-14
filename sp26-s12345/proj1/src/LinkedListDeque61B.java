@@ -1,6 +1,35 @@
 import java.util.List;
 
 public class LinkedListDeque61B<T> implements Deque61B<T> {
+    private class Node {
+        public T item;
+        public Node prev;
+        public Node next;
+
+        public Node(Node prev, T item, Node next) {
+            this.prev = prev;
+            this.item = item;
+            this.next = next;
+        }
+    }
+
+    private Node sentinel;
+    private int size;
+
+    /* Makes an empty list. */
+    public LinkedListDeque61B() {
+        sentinel = new Node(null, null, null);
+        sentinel.next = sentinel;  // point to itself
+        sentinel.prev = sentinel;
+        size = 0;
+    }
+
+    public static void main(String[] args) {
+        Deque61B<Integer> lld = new LinkedListDeque61B<>();
+        lld.addLast(0);   // [0]
+        lld.addLast(1);   // [0, 1]
+        lld.addFirst(-1); // [-1, 0, 1]
+    }
 
     /**
      * Add {@code x} to the front of the deque. Assumes {@code x} is never null.
@@ -9,7 +38,10 @@ public class LinkedListDeque61B<T> implements Deque61B<T> {
      */
     @Override
     public void addFirst(T x) {
-
+        Node newFirstNode = new Node(sentinel, x, sentinel.next);
+        sentinel.next.prev = newFirstNode;
+        sentinel.next = newFirstNode;
+        size += 1;
     }
 
     /**
@@ -19,7 +51,10 @@ public class LinkedListDeque61B<T> implements Deque61B<T> {
      */
     @Override
     public void addLast(T x) {
-
+        Node newLastNode = new Node(sentinel.prev, x, sentinel);
+        sentinel.prev.next = newLastNode;
+        sentinel.prev = newLastNode;
+        size += 1;
     }
 
     /**
@@ -119,13 +154,4 @@ public class LinkedListDeque61B<T> implements Deque61B<T> {
         return null;
     }
 
-    public LinkedListDeque61B() {
-    }
-
-    public static void main(String[] args) {
-        Deque61B<Integer> lld = new LinkedListDeque61B<>();
-        lld.addLast(0);   // [0]
-        lld.addLast(1);   // [0, 1]
-        lld.addFirst(-1); // [-1, 0, 1]
-    }
 }
