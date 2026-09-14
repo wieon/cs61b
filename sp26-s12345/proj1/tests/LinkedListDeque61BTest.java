@@ -89,4 +89,65 @@ public class LinkedListDeque61BTest {
         assertWithMessage("lld1 has 3 nodes: ").that(lld1.size()).isEqualTo(3);
     }
 
+    @Test
+    /** Test the getFirst method, including empty and non-empty cases. */
+    public void getFirstTest() {
+        Deque61B<Integer> lld1 = new LinkedListDeque61B<>();
+        assertWithMessage("lld1 is empty: ").that(lld1.getFirst()).isNull();
+        lld1.addFirst(-7);  // -7
+        assertWithMessage("lld1 has one item: ").that(lld1.getFirst()).isEqualTo(-7);
+        lld1.addFirst(4);  // 4, -7
+        assertWithMessage("using addFirst method: ").that(lld1.getFirst()).isEqualTo(4);
+        lld1.addLast(0);  // 4, -7, 0
+        assertWithMessage("using addLast method: ").that(lld1.getFirst()).isEqualTo(4);
+    }
+
+    @Test
+    /** Test the getLast method, including empty and non-empty cases. */
+    public void getLastTest() {
+        Deque61B<Integer> lld1 = new LinkedListDeque61B<>();
+        assertWithMessage("lld1 is empty: ").that(lld1.getLast()).isNull();
+        lld1.addFirst(-7);  // -7
+        assertWithMessage("lld1 has one item: ").that(lld1.getLast()).isEqualTo(-7);
+        lld1.addFirst(4);  // 4, -7
+        assertWithMessage("using addFirst method: ").that(lld1.getLast()).isEqualTo(-7);
+        lld1.addLast(0);  // 4, -7, 0
+        assertWithMessage("using addLast method: ").that(lld1.getLast()).isEqualTo(0);
+    }
+
+    @Test
+    /** In the test, iteratively get the element according to the index. Test the cases when the argument
+     * is out of boundary, --too large or negative, which will return null. */
+    public void getTest() {
+        Deque61B<Integer> lld1 = new LinkedListDeque61B<>();
+        assertWithMessage("lld1 is empty: ").that(lld1.get(0)).isNull();
+        lld1.addFirst(5);  // 5
+        assertWithMessage("lld1 is non-empty: ").that(lld1.get(0)).isEqualTo(5);
+        lld1.addLast(6);  // 5, 6
+        lld1.addLast(-9);  // 5, 6, -9
+        lld1.addLast(23);  // 5, 6, -9, 23
+        assertWithMessage("receiving a valid argument: ").that(lld1.get(3)).isEqualTo(23);
+        assertWithMessage("receiving an invalid argument: ").that(lld1.get(2325)).isNull();
+        assertWithMessage("receiving a negative argument: ").that(lld1.get(-4)).isNull();
+    }
+
+    @Test
+    /** In the test, recursively get the element according to the index. Test the cases when the argument
+     * is out of boundary, --too large or negative, which will return null. */
+    public void getRecursiveTest() {
+        Deque61B<Integer> lld1 = new LinkedListDeque61B<>();
+        assertWithMessage("lld1 is empty: ").that(lld1.getRecursive(0)).isNull();
+        assertWithMessage("lld1 is empty: ").that(lld1.getRecursive(88)).isNull();
+        assertWithMessage("lld1 is empty: ").that(lld1.getRecursive(-88)).isNull();
+        lld1.addFirst(5);  // 5
+        assertWithMessage("lld1 is non-empty: ").that(lld1.getRecursive(0)).isEqualTo(5);
+        assertWithMessage("lld1 is non-empty: ").that(lld1.getRecursive(66)).isNull();
+        assertWithMessage("lld1 is non-empty: ").that(lld1.getRecursive(-66)).isNull();
+        lld1.addLast(6);  // 5, 6
+        lld1.addLast(-9);  // 5, 6, -9
+        lld1.addLast(23);  // 5, 6, -9, 23
+        assertWithMessage("receiving a valid argument: ").that(lld1.getRecursive(3)).isEqualTo(23);
+        assertWithMessage("receiving an invalid argument: ").that(lld1.getRecursive(2325)).isNull();
+        assertWithMessage("receiving a negative argument: ").that(lld1.getRecursive(-4)).isNull();
+    }
 }

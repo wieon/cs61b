@@ -107,7 +107,7 @@ public class LinkedListDeque61B<T> implements Deque61B<T> {
      */
     @Override
     public T getFirst() {
-        return null;
+        return sentinel.next.item;
     }
 
     /**
@@ -117,7 +117,7 @@ public class LinkedListDeque61B<T> implements Deque61B<T> {
      */
     @Override
     public T getLast() {
-        return null;
+        return sentinel.prev.item;
     }
 
     /**
@@ -151,7 +151,19 @@ public class LinkedListDeque61B<T> implements Deque61B<T> {
      */
     @Override
     public T get(int index) {
-        return null;
+        if (isEmpty()) {
+            return null;
+        }
+        int count = 0;
+        Node targetNode = sentinel.next;
+        if (index >= 0 && index <= size-1) {
+            while (count != index) {
+                targetNode = targetNode.next;
+                count += 1;
+            }
+            return targetNode.item;
+        }
+        return null;  // 把这个 return 放在 else 里的话会因为缺少返回语句而报错
     }
 
     /**
@@ -164,7 +176,20 @@ public class LinkedListDeque61B<T> implements Deque61B<T> {
      */
     @Override
     public T getRecursive(int index) {
+//        if (isEmpty()) {  // sentinel.next = sentinel
+//            return null;  // sentinel.item = null
+//        }
+        if (index >= 0 && index <= size-1) {
+            return getRecursiveHelper(index, sentinel.next);
+        }
         return null;
+    }
+
+    private T getRecursiveHelper(int index, Node currentNode) {
+        if (index == 0) {
+            return currentNode.item;
+        }
+        return getRecursiveHelper(index-1, currentNode.next);
     }
 
 }
