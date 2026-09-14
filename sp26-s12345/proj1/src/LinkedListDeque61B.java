@@ -83,7 +83,11 @@ public class LinkedListDeque61B<T> implements Deque61B<T> {
      */
     @Override
     public boolean isEmpty() {
-        return false;
+        if (sentinel.next == sentinel) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -93,7 +97,7 @@ public class LinkedListDeque61B<T> implements Deque61B<T> {
      */
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     /**
