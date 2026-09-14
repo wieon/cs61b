@@ -1,4 +1,6 @@
 import java.util.List;
+import java.util.ArrayList; // import the ArrayList class
+
 
 public class LinkedListDeque61B<T> implements Deque61B<T> {
     private class Node {
@@ -64,7 +66,14 @@ public class LinkedListDeque61B<T> implements Deque61B<T> {
      */
     @Override
     public List<T> toList() {
-        return List.of();
+        List<T> returnList = new ArrayList<>();
+        Node firstNode = sentinel.next;
+        while (firstNode != sentinel) {
+            returnList.add(firstNode.item);
+            firstNode = firstNode.next;
+        }
+        return returnList;
+//        return List.of();
     }
 
     /**
