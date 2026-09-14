@@ -150,4 +150,47 @@ public class LinkedListDeque61BTest {
         assertWithMessage("receiving an invalid argument: ").that(lld1.getRecursive(2325)).isNull();
         assertWithMessage("receiving a negative argument: ").that(lld1.getRecursive(-4)).isNull();
     }
+
+    @Test
+    /** Test that removeFirst method works correctly. */
+    public void removeFirstTest() {
+        Deque61B<Integer> lld1 = new LinkedListDeque61B<>();
+        assertWithMessage("List is empty: ").that(lld1.removeFirst()).isNull();
+        lld1.addFirst(5);  // 5
+        lld1.addFirst(10);  // 10, 5
+        lld1.addFirst(15);  // 15, 10, 5
+        assertWithMessage("List in order: ").that(lld1.toList()).containsExactly(15, 10, 5).inOrder();
+        assertWithMessage("Remove first: ").that(lld1.removeFirst()).isEqualTo(15);
+        assertWithMessage("Remove first: ").that(lld1.removeFirst()).isEqualTo(10);
+    }
+
+    @Test
+    /** Test that removeLast method works correctly. */
+    public void removeLastTest() {
+        Deque61B<Integer> lld1 = new LinkedListDeque61B<>();
+        assertWithMessage("List is empty: ").that(lld1.removeLast()).isNull();
+        lld1.addFirst(5);  // 5
+        lld1.addFirst(10);  // 10, 5
+        lld1.addFirst(15);  // 15, 10, 5
+        assertWithMessage("List in order: ").that(lld1.toList()).containsExactly(15, 10, 5).inOrder();
+        assertWithMessage("Remove last: ").that(lld1.removeLast()).isEqualTo(5);
+        assertWithMessage("Remove last: ").that(lld1.removeLast()).isEqualTo(10);
+    }
+
+    @Test
+    /** This test performs interspersed removeFirst and removeLast calls. */
+    public void removeFirstAndAddLastTest() {
+        Deque61B<Integer> lld1 = new LinkedListDeque61B<>();
+        lld1.addLast(0);   // [0]
+        lld1.addLast(1);   // [0, 1]
+        lld1.addFirst(-1); // [-1, 0, 1]
+        lld1.addLast(2);   // [-1, 0, 1, 2]
+        lld1.addFirst(-2); // [-2, -1, 0, 1, 2]
+        assertThat(lld1.toList()).containsExactly(-2, -1, 0, 1, 2).inOrder();
+        lld1.removeFirst();
+        lld1.removeLast();
+        lld1.removeFirst();
+        assertThat(lld1.toList()).containsExactly(0, 1).inOrder();
+    }
+
 }
