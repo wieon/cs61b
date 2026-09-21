@@ -1,8 +1,40 @@
 import java.util.List;
 
 public class ArrayDeque61B<T> implements Deque61B<T> {
-    public ArrayDeque61B() {
+    private T[] items;
+    private int size;
+    private int nextFirst;
+    private int nextLast;
+    private int length;
 
+    public ArrayDeque61B() {
+        items = (T[]) new Object[8];
+        size = 0;
+        nextFirst = 0;
+        nextLast = 1;
+        length = 8;
+    }
+
+    /* Move the nextFirst pointer. */
+    private void nextFirstHelper() {
+        nextFirst = (nextFirst - 1 + length) % length;
+    }
+
+    /* Move the nextLast pointer. */
+    private void nextLastHelper() {
+        nextLast = (nextLast + 1) % length;
+    }
+
+    /* Create a new array which doubles the length, and put elements at first half. */
+    private void upSizeHelper() {
+        T[] newItems = (T[]) new Object[length * 2];
+        for(int i = 0; i < length; i++) {
+            newItems[i] = get(i);
+        }
+        length *= 2;
+        nextFirst = length - 1;
+        nextLast = length;
+        items = newItems;
     }
 
 
@@ -13,7 +45,12 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
      */
     @Override
     public void addFirst(T x) {
-
+        if (size == length) {
+            upSizeHelper();
+        }
+        items[nextFirst] = x;
+        nextFirstHelper();
+        size++;
     }
 
     /**
@@ -23,7 +60,12 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
      */
     @Override
     public void addLast(T x) {
-
+        if (size == length) {
+            upSizeHelper();
+        }
+        items[nextLast] = x;
+        nextLastHelper();
+        size++;
     }
 
     /**
@@ -107,7 +149,10 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
      */
     @Override
     public T get(int index) {
-        return null;
+        if (index < 0 || index >= size) {
+            return null;
+        }
+        return items[index];
     }
 
     /**
