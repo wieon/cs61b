@@ -74,4 +74,43 @@ public class ArrayDeque61BTest {
         ad.addLast(66);
         assertThat(ad.getLast()).isEqualTo(66);
     }
+
+    @Test
+    /* Test get method, including out-of-boundary case. */
+    public void getTest() {
+        Deque61B<Integer> ad = new ArrayDeque61B<>();
+        assertWithMessage("empty: ").that(ad.get(1)).isNull();
+        ad.addFirst(6);
+        assertWithMessage("out of boundary: ").that(ad.get(-1)).isNull();
+        assertWithMessage("out of boundary: ").that(ad.get(44)).isNull();
+        assertThat(ad.get(0)).isEqualTo(6);
+        ad.addFirst(9);
+        ad.addLast(0);
+        ad.addLast(34);
+        assertWithMessage("beyond size: ").that(ad.get(7)).isNull();
+        assertThat(ad.get(2)).isEqualTo(34);
+    }
+
+    @Test
+    /* Test isEmpty method. */
+    public void isEmptyTest() {
+        Deque61B<Integer> ad = new ArrayDeque61B<>();
+        assertWithMessage("empty: ").that(ad.toList()).isEmpty();
+        ad.addFirst(0);
+        assertWithMessage("not empty: ").that(ad.toList()).isNotEmpty();
+    }
+
+    @Test
+    /* Test size method. */
+    public void sizeTest() {
+        Deque61B<Integer> ad = new ArrayDeque61B<>();
+        assertThat(ad.size()).isEqualTo(0);
+        ad.addFirst(0);
+        ad.addLast(34);
+        assertThat(ad.size()).isEqualTo(2);
+        for (int i = 2; i < 12; i++) {
+            ad.addLast(5);
+        }
+        assertThat(ad.size()).isEqualTo(12);
+    }
 }

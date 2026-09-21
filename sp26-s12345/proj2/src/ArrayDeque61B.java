@@ -32,9 +32,9 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
         for(int i = 0; i < length; i++) {
             newItems[i] = get(i);
         }
+        nextLast = length;
         length *= 2;
         nextFirst = length - 1;
-        nextLast = length;
         items = newItems;
     }
 
@@ -172,6 +172,6 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
      */
     @Override
     public T getRecursive(int index) {
-        return null;
+        throw new UnsupportedOperationException("No need to implement getRecursive for ArrayDeque61B.");
     }
 }
