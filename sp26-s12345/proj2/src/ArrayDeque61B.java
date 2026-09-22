@@ -1,4 +1,8 @@
+import edu.princeton.cs.algs4.ST;
+import org.apache.commons.collections.iterators.ArrayIterator;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class ArrayDeque61B<T> implements Deque61B<T> {
@@ -6,7 +10,9 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
     private int size;
     private int nextFirst;
     private int nextLast;
-    private int length;
+    public int length;
+    private int upSizeFactor;
+    private int downSizeFactor;
 
     public ArrayDeque61B() {
         items = (T[]) new Object[8];
@@ -14,6 +20,8 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
         nextFirst = 0;
         nextLast = 1;
         length = 8;
+        upSizeFactor = 2;
+        downSizeFactor = 2;
     }
 
     /* Move the nextFirst pointer. */
@@ -23,17 +31,28 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
 
     /* Move the nextLast pointer. */
     private void nextLastHelper() {
-        nextLast = (nextLast + 1) % length;
+        nextLast = (++nextLast) % length;
     }
 
     /* Create a new array which doubles the length, and put elements at first half. */
-    private void upSizeHelper() {
-        T[] newItems = (T[]) new Object[length * 2];
-        for(int i = 0; i < length; i++) {
+    private void upSizeHelper(int upSizeFactor) {
+        T[] newItems = (T[]) new Object[length * upSizeFactor];
+        for(int i = 0; i < size; i++) {
             newItems[i] = get(i);
         }
-        nextLast = length;
+        nextLast = size;
         length *= 2;
+        nextFirst = length - 1;
+        items = newItems;
+    }
+
+    private void downSizeHelper(int downSizeFactor) {
+        T[] newItems = (T[]) new Object[length / upSizeFactor];
+        for (int i = 0; i < size; i ++) {
+            newItems[i] = get(i);
+        }
+        nextLast = 0;
+        length /= downSizeFactor;
         nextFirst = length - 1;
         items = newItems;
     }
@@ -47,7 +66,7 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
     @Override
     public void addFirst(T x) {
         if (size == length) {
-            upSizeHelper();
+            upSizeHelper(upSizeFactor);
         }
         items[nextFirst] = x;
         nextFirstHelper();
@@ -62,7 +81,7 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
     @Override
     public void addLast(T x) {
         if (size == length) {
-            upSizeHelper();
+            upSizeHelper(downSizeFactor);
         }
         items[nextLast] = x;
         nextLastHelper();
@@ -132,7 +151,18 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
      */
     @Override
     public T removeFirst() {
-        return null;
+        if (isEmpty()) {
+            return null;
+        }
+        int i = (nextFirst + 1 + length) % length;
+        T removed = items[i];
+        items[i] = null;
+        nextFirst = i;
+        size--;
+        if (length >= 16 && size * 4 <= length) {
+            downSizeHelper(downSizeFactor);
+        }
+        return removed;
     }
 
     /**
@@ -142,7 +172,18 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
      */
     @Override
     public T removeLast() {
-        return null;
+        if (isEmpty()) {
+            return null;
+        }
+        int i = (nextLast - 1 + length) % length;
+        T removed = items[i];
+        items[i] = null;
+        nextLast = i;
+        size--;
+        if (length >= 16 && size * 4 <= length) {
+            downSizeHelper(downSizeFactor);
+        }
+        return removed;
     }
 
     /**
@@ -159,7 +200,7 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
         if (index < 0 || index >= size) {
             return null;
         }
-        return items[index];
+        return items[(nextFirst+index+1)%length];  // 获取 deque 序号元素，而非 array 序号元素
     }
 
     /**
@@ -173,5 +214,81 @@ public class ArrayDeque61B<T> implements Deque61B<T> {
     @Override
     public T getRecursive(int index) {
         throw new UnsupportedOperationException("No need to implement getRecursive for ArrayDeque61B.");
+    }
+
+    /**
+     * Returns an iterator over elements of type {@code T}.
+     *
+     * @return an Iterator.
+     */
+    @Override
+    /* Return an iterator. */
+    public Iterator<T> iterator() {
+        return new ArrayDeque61BIterator();
+    }
+
+    private class ArrayDeque61BIterator implements Iterator<T>{
+        private int wizPos;
+        public ArrayDeque61BIterator() {
+            wizPos = 0;
+        }
+
+        public boolean hasNext() {
+            return wizPos < size;
+        }
+
+        public T next() {
+            T returnItem = items[wizPos];
+            wizPos += 1;
+            return returnItem;
+        }
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        // this and other object reference the same object
+        if (this == other) {
+            return true;
+        }
+        if (other instanceof ArrayDeque61B<?> oad) {
+            // check arrayDeque are of the same size
+            if (oad.size != this.size) {
+                return false;
+            }
+            // check that all of my items are in the other arrayDeque
+//            for (T x : this) {
+//                if (!oad.contains(x)) {
+//                    return false;
+//                }
+//            }
+            for (int i = 0; i < size; i++) {
+                if (!this.get(i).equals(oad.get(i))) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        // o is not an arrayDeque, so returns false
+        return false;
+    }
+
+    @Override
+    public String toString() {
+//        String returnString = "{";
+//        for (T item : this) {
+//            returnString += item.toString();
+//            returnString += ",";
+//        }
+//        returnString += "}";
+//        return returnString;
+
+        StringBuilder returnSB = new StringBuilder("{");
+        for (int i = 0; i < size-1; i++) {
+            returnSB.append(get(i));
+            returnSB.append(",");
+        }
+        returnSB.append(get(size-1));
+        returnSB.append("}");
+        return returnSB.toString();
     }
 }

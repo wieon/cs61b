@@ -88,7 +88,7 @@ public class ArrayDeque61BTest {
         ad.addLast(0);
         ad.addLast(34);
         assertWithMessage("beyond size: ").that(ad.get(7)).isNull();
-        assertThat(ad.get(2)).isEqualTo(34);
+        assertThat(ad.get(2)).isEqualTo(0);
     }
 
     @Test
@@ -113,4 +113,53 @@ public class ArrayDeque61BTest {
         }
         assertThat(ad.size()).isEqualTo(12);
     }
+
+    @Test
+    /* Test removeFirst method. */
+    public void removeFirstTest() {
+        Deque61B<Integer> ad = new ArrayDeque61B<>();
+        assertThat(ad.removeFirst()).isNull();
+        ad.addFirst(26);
+        ad.addFirst(50);
+        ad.addFirst(25);
+        assertThat(ad.removeFirst()).isEqualTo(25);
+        assertThat(ad.removeFirst()).isEqualTo(50);
+    }
+
+    @Test
+    /* Test removeLast method. */
+    public void removeLastTest() {
+        Deque61B<Integer> ad = new ArrayDeque61B<>();
+        assertThat(ad.removeLast()).isNull();
+        ad.addLast(78);
+        ad.addLast(112);
+        assertThat(ad.removeLast()).isEqualTo(112);
+        assertThat(ad.removeLast()).isEqualTo(78);
+    }
+
+    @Test
+    /* Test resizeUp method. */
+    public void resizeUpTest() {
+        Deque61B<Integer> ad = new ArrayDeque61B<>();
+        for (int i = 0; i < 16; i++) {
+            ad.addLast(i);
+        }
+    assertThat(ad.size()).isEqualTo(16);
+    }
+
+    @Test
+    /* Test resizeDown method. */
+    public void resizeDownTest() {
+        Deque61B<Integer> ad = new ArrayDeque61B<>();
+        for (int i = 0; i < 32; i++) {
+            ad.addLast(i);
+        }
+        assertThat(((ArrayDeque61B<Integer>) ad).length).isEqualTo(32);
+        for (int i = 0; i < 30; i--) {
+            ad.removeLast();
+        }
+        assertThat(((ArrayDeque61B<Integer>) ad).length).isEqualTo(8);
+    }
+
+
 }
